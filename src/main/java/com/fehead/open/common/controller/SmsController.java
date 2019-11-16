@@ -1,5 +1,6 @@
 package com.fehead.open.common.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fehead.lang.config.FeheadProperties;
 import com.fehead.lang.controller.BaseController;
 import com.fehead.lang.error.BusinessException;
@@ -63,7 +64,7 @@ public class SmsController extends BaseController {
      * @throws BusinessException
      */
     @PostMapping(value = "/send")
-    public FeheadResponse sendSms(@RequestParam("tel")String tel,@RequestParam("action")String action) throws BusinessException {
+    public FeheadResponse sendSms(@RequestParam("tel")String tel,@RequestParam("action")String action) throws BusinessException, JsonProcessingException {
 
         // 检查手机号是否合法
         if (!CheckEmailAndTelphoneUtil.checkTelphone(tel)) {
@@ -93,8 +94,8 @@ public class SmsController extends BaseController {
                 }
             }
         } else if (action.equals(SmsAction.RESET.actionStr)) {
-            if (smsService.check(feheadProperties.getSmsProperties().getLoginPreKeyInRedis() + tel)) {
-                ValidateCode code = (ValidateCode) redisService.get(feheadProperties.getSmsProperties().getLoginPreKeyInRedis() + tel);
+            if (smsService.check(feheadProperties.getSmsProperties().getResetPreKeyInRedis() + tel)) {
+                ValidateCode code = (ValidateCode) redisService.get(feheadProperties.getSmsProperties().getResetPreKeyInRedis() + tel);
                 if (!code.isExpired(60)) {
                     logger.info("验证码已发送");
                     throw new BusinessException(EmBusinessError.SMS_ALREADY_SEND);
@@ -107,7 +108,19 @@ public class SmsController extends BaseController {
             throw new BusinessException(EmBusinessError.OPERATION_ILLEGAL, "action异常");
         }
 
-        return null;
+        // 根据行为选择模板发送短信  0为注册模板，1为登录模板，2为重置模版
+        if (action.equals(SmsAction.LOGIN.actionStr)) {
+            smsService.send(tel, 1);
+        } else if (action.equals(SmsAction.REGISTER.actionStr)) {
+            smsService.send(tel, 0);
+        } else if(action.equals(SmsAction.RESET.actionStr)){
+            smsService.send(tel, 2);
+        }else {
+            logger.info("action异常");
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR, "action异常");
+        }
+
+        return CommonReturnType.create(tel);
 
     }
 

@@ -1,5 +1,6 @@
 package com.fehead.open.common.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fehead.lang.config.FeheadProperties;
 import com.fehead.lang.error.BusinessException;
 import com.fehead.lang.error.EmBusinessError;
@@ -11,8 +12,6 @@ import com.fehead.open.common.util.SmsUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +66,7 @@ public class SmsServiceImpl implements SmsService {
     }
 
     @Override
-    public void send(String telphone, Integer modelId) throws BusinessException {
+    public void send(String telphone, Integer modelId) throws BusinessException, JsonProcessingException {
         Map<String, String> paramMap = new HashMap<>();
         ValidateCode smsCode = CreateCodeUtil.createCode(telphone, 6);
         paramMap.put("code", smsCode.getCode());
@@ -98,6 +97,6 @@ public class SmsServiceImpl implements SmsService {
             default:
                 break;
         }
-//        smsUtil.sendSms(modelName, paramMap, telphone);
+        smsUtil.sendSms(modelName, paramMap, telphone);
     }
 }

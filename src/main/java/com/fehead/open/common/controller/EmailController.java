@@ -1,21 +1,27 @@
 package com.fehead.open.common.controller;
 
+import com.fehead.lang.config.FeheadProperties;
 import com.fehead.lang.controller.BaseController;
 import com.fehead.lang.error.BusinessException;
 import com.fehead.lang.error.EmBusinessError;
+import com.fehead.lang.response.AuthenticationReturnType;
 import com.fehead.lang.response.CommonReturnType;
 import com.fehead.lang.response.FeheadResponse;
 import com.fehead.open.common.service.EmailService;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
+import com.fehead.open.common.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,8 +42,24 @@ public class EmailController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailController.class);
 
+    private final RedisService redisService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final FeheadProperties feheadProperties;
+
+    /**
+     * 发送校验邮件
+     * @param request
+     * @param response
+     * @return
+     * @throws MessagingException
+     * @throws BusinessException
+     * @throws IOException
+     * @throws ServletException
+     */
     @PostMapping("/send")
-    public FeheadResponse sendAuthenticationEmail(HttpServletRequest request, HttpServletResponse response) throws MessagingException, BusinessException, IOException, ServletException {
+    public FeheadResponse sendAuthenticationEmail(HttpServletRequest request, HttpServletResponse response) throws MessagingException, BusinessException, com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException {
 
         String toAddress = request.getParameter("address");
         String action = request.getParameter("action");
@@ -69,6 +91,32 @@ public class EmailController extends BaseController {
         }
 
         return CommonReturnType.create("发送成功");
+    }
+
+    /**
+     * 邮件校验
+     * @param address
+     * @param code
+     * @return
+     * @throws BusinessException
+     */
+    @PostMapping("/validate")
+    public FeheadResponse validateEmailCode(String address,String code) throws BusinessException {
+
+        String smsKey = "";
+        if(StringUtils.isEmpty(address) || StringUtils.isEmpty(code)){
+            return AuthenticationReturnType.create(EmBusinessError.EMAIL_TO_EMPTY.getErrorMsg(), HttpStatus.PAYMENT_REQUIRED.value());
+        }
+
+        if (eMailService.validateEmailCode(address,code)) {
+            smsKey = passwordEncoder.encode(address);
+            logger.info("密钥：" + smsKey);
+            redisService.set("sms_key_"+ address, smsKey, (long)feheadProperties.getTimeProperties().getSmsKeyExpiredTime());
+        } else {
+            logger.info("验证码不匹配");
+            throw new BusinessException(EmBusinessError.SMS_ILLEGAL);
+        }
+        return CommonReturnType.create(smsKey);
     }
 
 }

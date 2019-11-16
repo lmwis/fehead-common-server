@@ -1,6 +1,7 @@
 package com.fehead.open.common.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fehead.lang.error.BusinessException;
 
 /**
@@ -28,5 +29,5 @@ public interface SmsService {
 
     public boolean check(String key) throws BusinessException;
 
-    public void send(String telphone, Integer modelId) throws BusinessException;
+    public void send(String telphone, Integer modelId) throws BusinessException, JsonProcessingException;
 }

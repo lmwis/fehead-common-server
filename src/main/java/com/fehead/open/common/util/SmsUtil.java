@@ -12,6 +12,8 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fehead.lang.config.FeheadProperties;
+import com.fehead.lang.error.BusinessException;
+import com.fehead.lang.error.EmBusinessError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +55,7 @@ public class SmsUtil {
      * @param phone   用户手机号码
      * @return boolean true成功false失败
      */
-    public  boolean sendSms(String modelName, Map<String, String> modelParam, String phone) throws JsonProcessingException {
+    public  boolean sendSms(String modelName, Map<String, String> modelParam, String phone) throws JsonProcessingException, BusinessException {
 
         boolean result = false;
 
@@ -82,10 +84,9 @@ public class SmsUtil {
             CommonResponse response = client.getCommonResponse(request);
             System.out.println(response.getData());
             result = true;
-        } catch (ServerException e) {
-            e.printStackTrace();
-        } catch (ClientException e) {
-            e.printStackTrace();
+        } catch (ClientException e1) {
+            e1.printStackTrace();
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR,"服务端错误，验证码发送失败");
         }
 
         return result;

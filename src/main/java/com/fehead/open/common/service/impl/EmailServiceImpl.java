@@ -8,13 +8,13 @@ import com.fehead.open.common.service.RedisService;
 import com.fehead.open.common.service.model.ValidateCode;
 import com.fehead.open.common.util.CreateCodeUtil;
 import com.fehead.open.common.util.SendEmailUtil;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
     private final RedisService redisService;
 
     @Override
-    public void sendValidateEmail(String toAddress) throws MessagingException, BusinessException {
+    public void sendValidateEmail(String toAddress) throws BusinessException, MessagingException {
 
         if(StringUtils.isEmpty(toAddress)){
             throw new BusinessException(EmBusinessError.EMAIL_TO_EMPTY);

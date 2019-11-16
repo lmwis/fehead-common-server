@@ -11,7 +11,7 @@ import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
  */
 public interface EmailService {
 
-    public void sendValidateEmail(String toAddress) throws MessagingException, BusinessException;
+    public void sendValidateEmail(String toAddress) throws MessagingException, BusinessException, javax.mail.MessagingException;
 
     boolean validateEmailCode(String yourEmail, String code) throws BusinessException;
 }
