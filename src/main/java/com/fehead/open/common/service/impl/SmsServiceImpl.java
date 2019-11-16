@@ -97,6 +97,7 @@ public class SmsServiceImpl implements SmsService {
             default:
                 break;
         }
-        smsUtil.sendSms(modelName, paramMap, telphone);
+        // 发送短信
+//        smsUtil.sendSms(modelName, paramMap, telphone);
     }
 }

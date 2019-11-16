@@ -126,34 +126,39 @@ public class SmsController extends BaseController {
 
     /**
      * 对手机号和验证码进行校验
-     * @param request
-     * @param response
+     * @param tel
+     * @param code
      * @return
      * @throws BusinessException
      */
     @PutMapping(value = "/validate")
-    public FeheadResponse validateSms(HttpServletRequest request, HttpServletResponse response) throws BusinessException {
+    public FeheadResponse validateSms(@RequestParam("tel")String tel, @RequestParam("code")String code) throws BusinessException {
 
-        String telphoneInRequest = request.getParameter("tel");
-        String codeInRequest = request.getParameter("code");
         String smsKey = "";
-        logger.info("手机号：" + telphoneInRequest);
-        logger.info("验证码：" + codeInRequest);
-        if (!CheckEmailAndTelphoneUtil.checkTelphone(telphoneInRequest)) {
+        logger.info("手机号：" + tel);
+        logger.info("验证码：" + code);
+        if (!CheckEmailAndTelphoneUtil.checkTelphone(tel)) {
             logger.info("手机号不合法");
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "手机号不合法");
         }
-        if (codeInRequest.isEmpty()) {
+        if (code.isEmpty()) {
             logger.info("验证码为空");
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "验证码为空");
         }
-        if (registerValidate(telphoneInRequest, codeInRequest)) {
-            smsKey = passwordEncoder.encode(telphoneInRequest);
-            logger.info("密钥：" + smsKey);
-            redisService.set("sms_key_"+ telphoneInRequest, smsKey, new Long(30*60));
+        if (registerValidate(tel, code)) { // 校验成功
+
+            return CommonReturnType.create(tel);
+            // 不需要额外密钥了
+//            smsKey = passwordEncoder.encode(tel);
+//            logger.info("密钥：" + smsKey);
+//            redisService.set("sms_key_"+ tel, smsKey, (long)30*60);
+        }else{
+            throw new BusinessException(EmBusinessError.SMS_ILLEGAL);
         }
 
-        return CommonReturnType.create(smsKey);
+
+
+
     }
     private boolean registerValidate(String telphoneInRequest, String codeInRequest) throws BusinessException {
         ValidateCode smsCode = new ValidateCode();

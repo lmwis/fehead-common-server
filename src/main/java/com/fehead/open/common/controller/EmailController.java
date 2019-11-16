@@ -16,10 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -50,21 +47,18 @@ public class EmailController extends BaseController {
 
     /**
      * 发送校验邮件
-     * @param request
-     * @param response
+     * @param address
+     * @param action
      * @return
      * @throws MessagingException
      * @throws BusinessException
-     * @throws IOException
-     * @throws ServletException
+     * @throws com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException
      */
     @PostMapping("/send")
-    public FeheadResponse sendAuthenticationEmail(HttpServletRequest request, HttpServletResponse response) throws MessagingException, BusinessException, com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException {
+    public FeheadResponse sendAuthenticationEmail(@RequestParam("address")String address,@RequestParam("action") String action) throws MessagingException, BusinessException, com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException {
 
-        String toAddress = request.getParameter("address");
-        String action = request.getParameter("action");
 
-        if(StringUtils.isEmpty(toAddress)){
+        if(StringUtils.isEmpty(address)){
 //            feheadAuthenticationFailureHandler.onAuthenticationFailure(request,response,new SmsValidateException(EmBusinessError.EMAIL_TO_EMPTY));
             logger.info("接收地址为空");
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "接收地址为空");
@@ -81,10 +75,10 @@ public class EmailController extends BaseController {
 
         // 目前登录注册的验证邮件格式相同，暂不做区分
         if (action.equals("login")) {
-            eMailService.sendValidateEmail(toAddress);
+            eMailService.sendValidateEmail(address);
         } else if (action.equals("register")) {
             //发送注册校验邮箱
-            eMailService.sendValidateEmail(toAddress);
+            eMailService.sendValidateEmail(address);
         } else {
             logger.info("action参数不合法");
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "action参数不合法");
@@ -100,7 +94,7 @@ public class EmailController extends BaseController {
      * @return
      * @throws BusinessException
      */
-    @PostMapping("/validate")
+    @PutMapping("/validate")
     public FeheadResponse validateEmailCode(String address,String code) throws BusinessException {
 
         String smsKey = "";
