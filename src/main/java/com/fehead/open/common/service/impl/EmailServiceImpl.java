@@ -1,6 +1,6 @@
 package com.fehead.open.common.service.impl;
 
-import com.fehead.lang.config.FeheadProperties;
+import com.fehead.lang.properties.FeheadProperties;
 import com.fehead.lang.error.BusinessException;
 import com.fehead.lang.error.EmBusinessError;
 import com.fehead.open.common.service.EmailService;

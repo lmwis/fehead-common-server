@@ -1,7 +1,7 @@
 package com.fehead.open.common.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fehead.lang.config.FeheadProperties;
+import com.fehead.lang.properties.FeheadProperties;
 import com.fehead.lang.controller.BaseController;
 import com.fehead.lang.error.BusinessException;
 import com.fehead.lang.error.EmBusinessError;
@@ -17,9 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import util.CheckEmailAndTelphoneUtil;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Description:

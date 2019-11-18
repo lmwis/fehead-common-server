@@ -2,7 +2,7 @@
 package com.fehead.open.common.util;
 
 
-import com.fehead.lang.config.FeheadProperties;
+import com.fehead.lang.properties.FeheadProperties;
 import com.fehead.lang.error.BusinessException;
 import com.fehead.lang.error.EmBusinessError;
 import lombok.RequiredArgsConstructor;
