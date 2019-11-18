@@ -1,6 +1,6 @@
 package com.fehead.open.common.controller;
 
-import com.fehead.lang.config.FeheadProperties;
+import com.fehead.lang.properties.FeheadProperties;
 import com.fehead.lang.controller.BaseController;
 import com.fehead.lang.error.BusinessException;
 import com.fehead.lang.error.EmBusinessError;
@@ -13,16 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * @Description:
