@@ -1,7 +1,7 @@
 
 spring:
   application:
-    name: fehead-common-server
+    name: fehead-common-service
   # 加密配置文件
   profiles:
     active: enc
