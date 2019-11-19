@@ -1,7 +1,6 @@
 package com.fehead.open.common.service;
 
 import com.fehead.lang.error.BusinessException;
-
 import javax.mail.MessagingException;
 
 /**

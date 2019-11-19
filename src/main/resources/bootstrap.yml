@@ -11,11 +11,20 @@ spring:
       discovery:
         enabled: true
         service-id: FEHEAD-CONFIG-SERVER
+<<<<<<< HEAD
 #      profile: test
       profile: master
+=======
+      profile: test
+>>>>>>> a6a4a00efcd0631595f21251490a5abdaf4fae11
 # 注册中心地址
 eureka:
   client:
     service-url:
+<<<<<<< HEAD
       defaultZone: http://open.fehead.com:8761/eureka
 #      defaultZone: http://localhost:8761/eureka
+=======
+#      defaultZone: http://open.fehead.com:8761/eureka
+      defaultZone: http://localhost:8761/eureka
+>>>>>>> a6a4a00efcd0631595f21251490a5abdaf4fae11

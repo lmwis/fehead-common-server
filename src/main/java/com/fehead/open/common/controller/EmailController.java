@@ -52,7 +52,6 @@ public class EmailController extends BaseController {
     @PostMapping("/send")
     public FeheadResponse sendAuthenticationEmail(@RequestParam("address")String address,@RequestParam("action") String action) throws MessagingException, BusinessException {
 
-
         if(StringUtils.isEmpty(address)){
 //            feheadAuthenticationFailureHandler.onAuthenticationFailure(request,response,new SmsValidateException(EmBusinessError.EMAIL_TO_EMPTY));
             logger.info("接收地址为空");
