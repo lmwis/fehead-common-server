@@ -2,7 +2,7 @@ package com.fehead.open.common;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @Version 1.0
  */
 @SpringBootApplication(scanBasePackages={"com.fehead.lang","com.fehead.open.common"})
-@EnableEurekaClient
+//@EnableEurekaClient
 @Configuration
 @EnableFeignClients // 开启feign支持
+@EnableDiscoveryClient // nacos
 public class FeheadCommonServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(FeheadCommonServerApplication.class,args);

@@ -1,12 +1,13 @@
 package com.fehead.open.common.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fehead.lang.properties.FeheadProperties;
 import com.fehead.lang.controller.BaseController;
 import com.fehead.lang.error.BusinessException;
 import com.fehead.lang.error.EmBusinessError;
+import com.fehead.lang.properties.FeheadProperties;
 import com.fehead.lang.response.CommonReturnType;
 import com.fehead.lang.response.FeheadResponse;
+import com.fehead.lang.util.CheckEmailAndTelphoneUtil;
 import com.fehead.open.common.service.RedisService;
 import com.fehead.open.common.service.SmsService;
 import com.fehead.open.common.service.model.ValidateCode;
@@ -16,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import util.CheckEmailAndTelphoneUtil;
 
 /**
  * @Description:
