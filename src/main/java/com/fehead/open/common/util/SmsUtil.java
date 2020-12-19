@@ -14,6 +14,7 @@ import com.fehead.lang.properties.FeheadProperties;
 import com.fehead.lang.error.BusinessException;
 import com.fehead.lang.error.EmBusinessError;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -41,6 +42,7 @@ import java.util.Map;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class SmsUtil {
 
     private final FeheadProperties securityProperties;
@@ -87,7 +89,7 @@ public class SmsUtil {
             e1.printStackTrace();
             throw new BusinessException(EmBusinessError.UNKNOWN_ERROR,"服务端错误，验证码发送失败");
         }
-
+        log.info("发送成功");
         return result;
     }
 }

@@ -98,6 +98,6 @@ public class SmsServiceImpl implements SmsService {
                 break;
         }
         // 发送短信
-//        smsUtil.sendSms(modelName, paramMap, telphone);
+        smsUtil.sendSms(modelName, paramMap, telphone);
     }
 }
