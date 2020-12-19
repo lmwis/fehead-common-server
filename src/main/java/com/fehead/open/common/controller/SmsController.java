@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @Description:
+ * @Description: 短信相关服务
  * @Author lmwis
  * @Date 2019-11-15 19:56
  * @Version 1.0
@@ -43,7 +43,6 @@ public class SmsController extends BaseController {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(SmsController.class);
-
 
     private final RedisService redisService;
 
@@ -131,7 +130,7 @@ public class SmsController extends BaseController {
     @PutMapping(value = "/validate")
     public FeheadResponse validateSms(@RequestParam("tel")String tel, @RequestParam("code")String code) throws BusinessException {
 
-        String smsKey = "";
+//        String smsKey = "";
         logger.info("手机号：" + tel);
         logger.info("验证码：" + code);
         if (!CheckEmailAndTelphoneUtil.checkTelphone(tel)) {
@@ -144,8 +143,9 @@ public class SmsController extends BaseController {
         }
         if (registerValidate(tel, code)) { // 校验成功
 
+            // 正常返回手机号
             return CommonReturnType.create(tel);
-            // 不需要额外密钥了
+            // 因为是后端校验所以不需要额外密钥了
 //            smsKey = passwordEncoder.encode(tel);
 //            logger.info("密钥：" + smsKey);
 //            redisService.set("sms_key_"+ tel, smsKey, (long)30*60);
@@ -154,9 +154,15 @@ public class SmsController extends BaseController {
         }
 
 
-
-
     }
+
+    /**
+     * 进行校验
+     * @param telphoneInRequest 请求中的tel
+     * @param codeInRequest 请求中的code
+     * @return
+     * @throws BusinessException
+     */
     private boolean registerValidate(String telphoneInRequest, String codeInRequest) throws BusinessException {
         ValidateCode smsCode = new ValidateCode();
 
@@ -191,7 +197,6 @@ public class SmsController extends BaseController {
 
         redisService.remove(feheadProperties.getSmsProperties().getRegisterPreKeyInRedis() + telphoneInRequest);
         redisService.remove(feheadProperties.getSmsProperties().getResetPreKeyInRedis() + telphoneInRequest);
-
 
         return true;
     }
